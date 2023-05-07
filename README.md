@@ -5,7 +5,7 @@ A simple utility to concatenate and reconstruct Python projects. It allows you t
 ## Installation
 
 ```bash
-pip install codec
+pip install git+https://github.com/niccolofavari/codec.git
 ```
 
 ## Usage
