@@ -1,9 +1,16 @@
 import os
 import sys
+import argparse
 
 DELIMITER = "#======#"
 
-def concatenate_files(root_dir):
+def pack_project(root_dir):
+    """
+    Packs a Python project into a single concatenated file.
+
+    :param root_dir: The root directory of the Python project.
+    :return: A string containing the concatenated project files.
+    """
     concatenated_code = ""
     for folder, _, files in os.walk(root_dir):
         for file in files:
@@ -16,7 +23,13 @@ def concatenate_files(root_dir):
                 concatenated_code += f"{delimiter_with_path}\n{file_content}\n"
     return concatenated_code
 
-def reconstruct_project(input_file_name, project_root):
+def unpack_project(input_file_name, project_root):
+    """
+    Unpacks a Python project from a concatenated file.
+
+    :param input_file_name: The name of the input file containing the concatenated project.
+    :param project_root: The root directory for the reconstructed project.
+    """
     with open(input_file_name, "r") as input_file:
         content = input_file.read()
 
@@ -36,24 +49,29 @@ def reconstruct_project(input_file_name, project_root):
             output_file.write(file_content)
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: codec <command> <project_folder>")
-        sys.exit(1)
+    """
+    Main function that handles command-line arguments and executes the appropriate command.
+    """
+    parser = argparse.ArgumentParser(description="Pack and unpack Python projects")
+    parser.add_argument("command", choices=["pack", "unpack"], help="Command to execute: pack or unpack")
+    parser.add_argument("project_folder", help="Path to the project folder")
 
-    command = sys.argv[1]
-    project_folder = sys.argv[2]
+    args = parser.parse_args()
 
-    if command == "concat":
-        concatenated_source_code = concatenate_files(project_folder)
+    command = args.command
+    project_folder = args.project_folder
+
+    if command == "pack":
+        concatenated_source_code = pack_project(project_folder)
         output_file_name = f"{project_folder}.txt"
 
         with open(output_file_name, "w") as output_file:
             output_file.write(concatenated_source_code)
 
-    elif command == "decat":
+    elif command == "unpack":
         input_file_name = f"{project_folder}.txt"
-        reconstruct_project(input_file_name, project_folder)
+        unpack_project(input_file_name, project_folder)
 
     else:
-        print("Invalid command. Use 'concat' or 'decat'.")
+        print("Invalid command. Use 'pack' or 'unpack'.")
         sys.exit(1)
