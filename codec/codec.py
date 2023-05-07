@@ -35,9 +35,9 @@ def reconstruct_project(input_file_name, project_root):
         with open(file_path, "w") as output_file:
             output_file.write(file_content)
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) != 3:
-        print("Usage: python script.py <command> <project_folder>")
+        print("Usage: codec <command> <project_folder>")
         sys.exit(1)
 
     command = sys.argv[1]
